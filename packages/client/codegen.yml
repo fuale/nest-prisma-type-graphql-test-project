@@ -1,0 +1,11 @@
+overwrite: true
+schema: "../server/schema.gql"
+documents: "src/graphql/**/*.graphql"
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-urql"
+    config:
+      fetchOptions:

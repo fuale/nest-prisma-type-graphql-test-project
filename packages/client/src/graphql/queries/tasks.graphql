@@ -1,0 +1,20 @@
+query GetUsersWithCreatedTasks {
+  users {
+    id
+    name
+    email
+
+    creatorTasks {
+      id
+      title
+      description
+    }
+  }
+}
+
+mutation CreateTask($title: String!, $description: String) {
+  createTask(data: { title: $title, description: $description, creator: { connect: { id: 1 } } }) {
+    title
+    description
+  }
+}
