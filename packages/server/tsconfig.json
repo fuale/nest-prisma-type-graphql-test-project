@@ -11,6 +11,9 @@
     "allowJs": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "skipLibCheck": true,
+    "strict": true,
     "incremental": true
-  }
+  },
+  "exclude": ["src/prisma/generated/client/**/*"]
 }

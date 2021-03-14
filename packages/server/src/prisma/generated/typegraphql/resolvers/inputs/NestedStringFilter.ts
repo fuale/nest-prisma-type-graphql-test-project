@@ -1,7 +1,7 @@
-import * as TypeGraphQL from "type-graphql"
-import * as GraphQLScalars from "graphql-scalars"
-import { Prisma } from "@prisma/client"
-import { DecimalJSScalar } from "../../scalars"
+import * as TypeGraphQL from "type-graphql";
+import * as GraphQLScalars from "graphql-scalars";
+import { Prisma } from "@prisma/client";
+import { DecimalJSScalar } from "../../scalars";
 
 @TypeGraphQL.InputType({
   isAbstract: true
@@ -15,50 +15,50 @@ export class NestedStringFilter {
   @TypeGraphQL.Field(_type => [String], {
     nullable: true
   })
-  in?: string[] | undefined
+  in?: string[] | undefined;
 
   @TypeGraphQL.Field(_type => [String], {
     nullable: true
   })
-  notIn?: string[] | undefined
+  notIn?: string[] | undefined;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true
   })
-  lt?: string | undefined
+  lt?: string | undefined;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true
   })
-  lte?: string | undefined
+  lte?: string | undefined;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true
   })
-  gt?: string | undefined
+  gt?: string | undefined;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true
   })
-  gte?: string | undefined
+  gte?: string | undefined;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true
   })
-  contains?: string | undefined
+  contains?: string | undefined;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true
   })
-  startsWith?: string | undefined
+  startsWith?: string | undefined;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true
   })
-  endsWith?: string | undefined
+  endsWith?: string | undefined;
 
   @TypeGraphQL.Field(_type => NestedStringFilter, {
     nullable: true
   })
-  not?: NestedStringFilter | undefined
+  not?: NestedStringFilter | undefined;
 }

@@ -1,3 +1,4 @@
+
 export function transformFields(fields: Record<string, any>): Record<string, any> {
   return Object.fromEntries(
     Object.entries(fields)
@@ -5,19 +6,19 @@ export function transformFields(fields: Record<string, any>): Record<string, any
       .filter(([key, value]) => !key.startsWith("__"))
       .map<[string, any]>(([key, value]) => {
         if (Object.keys(value).length === 0) {
-          return [key, true]
+          return [key, true];
         }
-        return [key, transformFields(value)]
-      })
-  )
+        return [key, transformFields(value)];
+      }),
+  );
 }
 
 export function getPrismaFromContext(context: any) {
-  const prismaClient = context.prisma
+  const prismaClient = context.prisma;
   if (!prismaClient) {
-    throw new Error(
-      "Unable to find Prisma Client in GraphQL context. Please provide it under the `context.prisma` key."
-    )
+    throw new Error("Unable to find Prisma Client in GraphQL context. Please provide it under the `context.prisma` key.");
   }
-  return prismaClient
+  return prismaClient;
 }
+
+

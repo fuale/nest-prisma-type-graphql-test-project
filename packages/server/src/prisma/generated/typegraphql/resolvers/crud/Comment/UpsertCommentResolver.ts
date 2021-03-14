@@ -1,7 +1,7 @@
-import * as TypeGraphQL from "type-graphql"
-import { UpsertCommentArgs } from "./args/UpsertCommentArgs"
-import { Comment } from "../../../models/Comment"
-import { transformFields, getPrismaFromContext } from "../../../helpers"
+import * as TypeGraphQL from "type-graphql";
+import { UpsertCommentArgs } from "./args/UpsertCommentArgs";
+import { Comment } from "../../../models/Comment";
+import { transformFields, getPrismaFromContext } from "../../../helpers";
 
 @TypeGraphQL.Resolver(_of => Comment)
 export class UpsertCommentResolver {
@@ -9,6 +9,6 @@ export class UpsertCommentResolver {
     nullable: false
   })
   async upsertComment(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: UpsertCommentArgs): Promise<Comment> {
-    return getPrismaFromContext(ctx).comment.upsert(args)
+    return getPrismaFromContext(ctx).comment.upsert(args);
   }
 }

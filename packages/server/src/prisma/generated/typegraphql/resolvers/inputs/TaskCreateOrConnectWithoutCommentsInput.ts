@@ -1,9 +1,9 @@
-import * as TypeGraphQL from "type-graphql"
-import * as GraphQLScalars from "graphql-scalars"
-import { Prisma } from "@prisma/client"
-import { DecimalJSScalar } from "../../scalars"
-import { TaskCreateWithoutCommentsInput } from "../inputs/TaskCreateWithoutCommentsInput"
-import { TaskWhereUniqueInput } from "../inputs/TaskWhereUniqueInput"
+import * as TypeGraphQL from "type-graphql";
+import * as GraphQLScalars from "graphql-scalars";
+import { Prisma } from "@prisma/client";
+import { DecimalJSScalar } from "../../scalars";
+import { TaskCreateWithoutCommentsInput } from "../inputs/TaskCreateWithoutCommentsInput";
+import { TaskWhereUniqueInput } from "../inputs/TaskWhereUniqueInput";
 
 @TypeGraphQL.InputType({
   isAbstract: true
@@ -12,10 +12,10 @@ export class TaskCreateOrConnectWithoutCommentsInput {
   @TypeGraphQL.Field(_type => TaskWhereUniqueInput, {
     nullable: false
   })
-  where!: TaskWhereUniqueInput
+  where!: TaskWhereUniqueInput;
 
   @TypeGraphQL.Field(_type => TaskCreateWithoutCommentsInput, {
     nullable: false
   })
-  create!: TaskCreateWithoutCommentsInput
+  create!: TaskCreateWithoutCommentsInput;
 }

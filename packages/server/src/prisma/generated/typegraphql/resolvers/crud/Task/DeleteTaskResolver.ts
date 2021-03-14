@@ -1,7 +1,7 @@
-import * as TypeGraphQL from "type-graphql"
-import { DeleteTaskArgs } from "./args/DeleteTaskArgs"
-import { Task } from "../../../models/Task"
-import { transformFields, getPrismaFromContext } from "../../../helpers"
+import * as TypeGraphQL from "type-graphql";
+import { DeleteTaskArgs } from "./args/DeleteTaskArgs";
+import { Task } from "../../../models/Task";
+import { transformFields, getPrismaFromContext } from "../../../helpers";
 
 @TypeGraphQL.Resolver(_of => Task)
 export class DeleteTaskResolver {
@@ -9,6 +9,6 @@ export class DeleteTaskResolver {
     nullable: true
   })
   async deleteTask(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: DeleteTaskArgs): Promise<Task | null> {
-    return getPrismaFromContext(ctx).task.delete(args)
+    return getPrismaFromContext(ctx).task.delete(args);
   }
 }

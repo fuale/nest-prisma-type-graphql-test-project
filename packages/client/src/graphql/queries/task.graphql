@@ -1,0 +1,17 @@
+query Task($id: Int!) {
+  task(where: { id: $id }) {
+    id
+    title
+    description
+
+    subTasks {
+      id
+      title
+    }
+
+    comments {
+      id
+      content
+    }
+  }
+}

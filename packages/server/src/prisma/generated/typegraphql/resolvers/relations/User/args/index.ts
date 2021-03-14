@@ -1,2 +1,2 @@
-export { UserAssigneeTasksArgs } from "./UserAssigneeTasksArgs"
-export { UserCreatorTasksArgs } from "./UserCreatorTasksArgs"
+export { UserAssigneeTasksArgs } from "./UserAssigneeTasksArgs";
+export { UserCreatorTasksArgs } from "./UserCreatorTasksArgs";

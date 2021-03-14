@@ -1,9 +1,9 @@
-import * as TypeGraphQL from "type-graphql"
-import * as GraphQLScalars from "graphql-scalars"
-import { Prisma } from "@prisma/client"
-import { DecimalJSScalar } from "../../scalars"
-import { CommentUpdateWithoutTaskInput } from "../inputs/CommentUpdateWithoutTaskInput"
-import { CommentWhereUniqueInput } from "../inputs/CommentWhereUniqueInput"
+import * as TypeGraphQL from "type-graphql";
+import * as GraphQLScalars from "graphql-scalars";
+import { Prisma } from "@prisma/client";
+import { DecimalJSScalar } from "../../scalars";
+import { CommentUpdateWithoutTaskInput } from "../inputs/CommentUpdateWithoutTaskInput";
+import { CommentWhereUniqueInput } from "../inputs/CommentWhereUniqueInput";
 
 @TypeGraphQL.InputType({
   isAbstract: true
@@ -12,10 +12,10 @@ export class CommentUpdateWithWhereUniqueWithoutTaskInput {
   @TypeGraphQL.Field(_type => CommentWhereUniqueInput, {
     nullable: false
   })
-  where!: CommentWhereUniqueInput
+  where!: CommentWhereUniqueInput;
 
   @TypeGraphQL.Field(_type => CommentUpdateWithoutTaskInput, {
     nullable: false
   })
-  data!: CommentUpdateWithoutTaskInput
+  data!: CommentUpdateWithoutTaskInput;
 }

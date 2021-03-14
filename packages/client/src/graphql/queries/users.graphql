@@ -1,7 +1,31 @@
 query GetAllUsers {
   users {
     email
-    name
+    username
+    firstname
+    lastname
     id
+  }
+}
+
+mutation Login($password: String!, $usernameOrEmail: String!) {
+  login(password: $password, usernameOrEmail: $usernameOrEmail) {
+    user {
+      username
+      firstname
+      lastname
+    }
+
+    errors {
+      message
+      field
+    }
+  }
+}
+
+query GetMe {
+  me {
+    id
+    username
   }
 }

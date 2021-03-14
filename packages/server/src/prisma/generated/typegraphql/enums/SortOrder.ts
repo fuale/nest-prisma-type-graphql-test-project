@@ -1,4 +1,4 @@
-import * as TypeGraphQL from "type-graphql"
+import * as TypeGraphQL from "type-graphql";
 
 export enum SortOrder {
   asc = "asc",
@@ -6,5 +6,5 @@ export enum SortOrder {
 }
 TypeGraphQL.registerEnumType(SortOrder, {
   name: "SortOrder",
-  description: undefined
-})
+  description: undefined,
+});

@@ -1,7 +1,7 @@
-import * as TypeGraphQL from "type-graphql"
-import { CreateTaskArgs } from "./args/CreateTaskArgs"
-import { Task } from "../../../models/Task"
-import { transformFields, getPrismaFromContext } from "../../../helpers"
+import * as TypeGraphQL from "type-graphql";
+import { CreateTaskArgs } from "./args/CreateTaskArgs";
+import { Task } from "../../../models/Task";
+import { transformFields, getPrismaFromContext } from "../../../helpers";
 
 @TypeGraphQL.Resolver(_of => Task)
 export class CreateTaskResolver {
@@ -9,6 +9,6 @@ export class CreateTaskResolver {
     nullable: false
   })
   async createTask(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Args() args: CreateTaskArgs): Promise<Task> {
-    return getPrismaFromContext(ctx).task.create(args)
+    return getPrismaFromContext(ctx).task.create(args);
   }
 }

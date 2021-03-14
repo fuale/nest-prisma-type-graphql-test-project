@@ -1,16 +1,41 @@
-import { Injectable, Req } from "@nestjs/common"
-import { Args, Context, Field, Mutation, ObjectType, ResolveField, Resolver, Root } from "@nestjs/graphql"
+import { Injectable, Req, Session } from "@nestjs/common"
+import * as argon2 from "argon2"
+import { Request, Response } from "express"
 import { RedisService } from "nestjs-redis"
+import { Query, Ctx, Mutation, Root, Resolver, InputType, Field, FieldResolver, ObjectType, Arg } from "type-graphql"
 import { User } from "../prisma/generated/typegraphql"
 import { PrismaService } from "../prisma/prisma.service"
-import argon2 from "argon2"
+
+interface Context {
+  req: Request & { session: Record<string, any> }
+  res: Response
+}
+
+@InputType()
+class RegisterInput {
+  @Field(() => String)
+  firstname = ""
+
+  @Field(() => String)
+  lastname = ""
+
+  @Field(() => String)
+  email = ""
+
+  @Field(() => String)
+  username = ""
+
+  @Field(() => String)
+  password = ""
+}
 
 @ObjectType()
 class FieldError {
   @Field()
-  field: string
+  field?: string = "<empty>"
+
   @Field()
-  message: string
+  message?: string = "<empty>"
 }
 
 @ObjectType()
@@ -23,25 +48,35 @@ class UserResponse {
 }
 
 @Injectable()
-@Resolver("User")
+@Resolver(() => User)
 export class UsersResolver {
   constructor(private prismaService: PrismaService, private redisService: RedisService) {}
 
-  @ResolveField(() => String)
-  email(@Root() user: User, @Req() req) {
+  @FieldResolver(() => String)
+  email(@Root() user: User, @Ctx() { req: { session } }: Context) {
     // this is the current user and its ok to show them their own email
-    if (req.session.userId === user.id) {
+    if (session.userId === user.id) {
       return user.email
     }
     // current user wants to see someone elses email
     return ""
   }
 
+  @Query(() => User, { nullable: true })
+  me(@Ctx() { req: { session } }: Context) {
+    // you are not logged in
+    if (!session.userId) {
+      return null
+    }
+
+    return this.prismaService.user.findFirst({ where: { id: session.userId } })
+  }
+
   @Mutation(() => UserResponse)
   async changePassword(
-    @Args("token") token: string,
-    @Args("newPassword") newPassword: string,
-    @Req() request
+    @Arg("token") token: string,
+    @Arg("newPassword") newPassword: string,
+    @Req() req: Request
   ): Promise<UserResponse> {
     if (newPassword.length <= 2) {
       return {
@@ -97,15 +132,16 @@ export class UsersResolver {
     await this.redisService.getClient("user").del(key)
 
     // log in user after change password
-    request.session.userId = user.id
+    Object.assign(req.session, { userId: user.id })
 
     return { user }
   }
 
   @Mutation(() => UserResponse)
   async register(
-    @Args("options") options: { email: string; username: string; password: string },
-    @Req() req
+    @Arg("options")
+    options: RegisterInput,
+    @Req() req: Request
   ): Promise<UserResponse> {
     if (!options.email.includes("@")) {
       return {
@@ -151,11 +187,14 @@ export class UsersResolver {
     }
 
     const hashedPassword = await argon2.hash(options.password)
-    let user
+    let user: User | null = null
+
     try {
       user = await this.prismaService.user.create({
         data: {
-          name: options.username,
+          firstname: options.firstname,
+          lastname: options.lastname,
+          username: options.username,
           email: options.email,
           password: hashedPassword
         }
@@ -176,25 +215,36 @@ export class UsersResolver {
       }
     }
 
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: "user",
+            message: "can't create user"
+          }
+        ]
+      }
+    }
+
     // store user id session
     // this will set a cookie on the user
     // keep them logged in
-    req.session.userId = user.id
+    Object.assign(req.session, { userId: user.id })
 
     return { user }
   }
 
   @Mutation(() => UserResponse)
   async login(
-    @Args("usernameOrEmail") usernameOrEmail: string,
-    @Args("password") password: string,
-    @Req() req
+    @Arg("usernameOrEmail") usernameOrEmail: string,
+    @Arg("password") password: string,
+    @Ctx() { req }: Context
   ): Promise<UserResponse> {
-    let user: User
+    let user: User | null
     if (usernameOrEmail.includes("@")) {
       user = await this.prismaService.user.findFirst({ where: { email: usernameOrEmail } })
     } else {
-      user = await this.prismaService.user.findFirst({ where: { name: usernameOrEmail } })
+      user = await this.prismaService.user.findFirst({ where: { username: usernameOrEmail } })
     }
 
     if (!user) {
@@ -227,7 +277,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => Boolean)
-  logout(@Context() { req, res }) {
+  logout(@Ctx() { req, res }: { req: Request; res: Response }) {
     return new Promise(resolve =>
       req.session.destroy(err => {
         res.clearCookie("ciq")

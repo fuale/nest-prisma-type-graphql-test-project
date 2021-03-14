@@ -1,7 +1,7 @@
-import * as TypeGraphQL from "type-graphql"
-import * as GraphQLScalars from "graphql-scalars"
-import { Prisma } from "@prisma/client"
-import { DecimalJSScalar } from "../../scalars"
+import * as TypeGraphQL from "type-graphql";
+import * as GraphQLScalars from "graphql-scalars";
+import { Prisma } from "@prisma/client";
+import { DecimalJSScalar } from "../../scalars";
 
 @TypeGraphQL.ObjectType({
   isAbstract: true
@@ -10,10 +10,10 @@ export class CommentSumAggregate {
   @TypeGraphQL.Field(_type => TypeGraphQL.Int, {
     nullable: false
   })
-  id!: number
+  id!: number;
 
   @TypeGraphQL.Field(_type => TypeGraphQL.Int, {
     nullable: true
   })
-  taskId!: number | null
+  taskId!: number | null;
 }

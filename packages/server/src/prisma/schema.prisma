@@ -12,29 +12,68 @@ generator typegraphql {
   output   = "generated/typegraphql"
 }
 
+enum Sex {
+  MALE
+  FEMALE
+  UNKNOWN
+}
+
 model User {
-  id            Int    @id @default(autoincrement())
-  name          String @db.VarChar(255)
-  email         String @unique @db.VarChar(255)
-  password      String @unique @db.VarChar(255)
-  creatorTasks  Task[] @relation("creator")
-  assigneeTasks Task[] @relation("assignee")
+  id            Int       @id @default(autoincrement())
+  username      String    @db.VarChar(255)
+  firstname     String    @db.VarChar(255)
+  lastname      String    @db.VarChar(255)
+  sex           Sex       @default(UNKNOWN)
+  email         String    @unique @db.VarChar(255)
+  password      String    @unique @db.VarChar(255)
+  creatorTasks  Task[]    @relation("creator")
+  assigneeTasks Task[]    @relation("assignee")
+  birthDate     DateTime? @db.Date
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+}
+
+model Project {
+  id   Int    @id @default(autoincrement())
+  key  String @db.VarChar(255)
+  task Task[]
 }
 
 model Task {
-  id          Int       @id @default(autoincrement())
-  title       String    @db.VarChar(255)
-  description String?   @db.Text
-  creator     User      @relation(name: "creator", fields: [creatorId], references: [id])
-  creatorId   Int
-  assignee    User?     @relation(name: "assignee", fields: [assigneeId], references: [id])
-  assigneeId  Int?
-  comments    Comment[]
+  id           Int       @id @default(autoincrement())
+  title        String    @db.VarChar(255)
+  description  String?   @db.Text
+  project      Project   @relation(fields: [projectId], references: [id])
+  creator      User      @relation(name: "creator", fields: [creatorId], references: [id])
+  creatorId    Int
+  assignee     User?     @relation(name: "assignee", fields: [assigneeId], references: [id])
+  assigneeId   Int?
+  comments     Comment[]
+  subTasks     Task[]    @relation("TaskToTask")
+  parentTask   Task?     @relation("TaskToTask", fields: [parentTaskId], references: [id])
+  parentTaskId Int?
+  status       Status?   @relation(fields: [statusId], references: [id])
+  statusId     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  projectId    Int
+}
+
+model Status {
+  id    String @id @default(uuid())
+  alias String
+  title String
+  task  Task[]
 }
 
 model Comment {
-  id      Int    @id @default(autoincrement())
-  content String @db.Text
-  task    Task?  @relation(fields: [taskId], references: [id])
-  taskId  Int?
+  id        Int       @id @default(autoincrement())
+  content   String    @db.Text
+  task      Task?     @relation(fields: [taskId], references: [id])
+  taskId    Int?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }

@@ -23,6 +23,15 @@ type AggregateUser {
   sum: UserSumAggregate
 }
 
+type Comment {
+  content: String!
+  createdAt: Timestamp!
+  deletedAt: Timestamp
+  id: Int!
+  taskId: Int
+  updatedAt: Timestamp!
+}
+
 input CommentCreateNestedManyWithoutTaskInput {
   connect: [CommentWhereUniqueInput!]
   connectOrCreate: [CommentCreateOrConnectWithoutTaskInput!]
@@ -36,6 +45,9 @@ input CommentCreateOrConnectWithoutTaskInput {
 
 input CommentCreateWithoutTaskInput {
   content: String!
+  createdAt: Timestamp
+  deletedAt: Timestamp
+  updatedAt: Timestamp
 }
 
 input CommentListRelationFilter {
@@ -44,17 +56,42 @@ input CommentListRelationFilter {
   some: CommentWhereInput
 }
 
+input CommentOrderByInput {
+  content: SortOrder
+  createdAt: SortOrder
+  deletedAt: SortOrder
+  id: SortOrder
+  task: TaskOrderByInput
+  taskId: SortOrder
+  updatedAt: SortOrder
+}
+
+enum CommentScalarFieldEnum {
+  content
+  createdAt
+  deletedAt
+  id
+  taskId
+  updatedAt
+}
+
 input CommentScalarWhereInput {
   AND: [CommentScalarWhereInput!]
   NOT: [CommentScalarWhereInput!]
   OR: [CommentScalarWhereInput!]
   content: StringFilter
+  createdAt: DateTimeFilter
+  deletedAt: DateTimeNullableFilter
   id: IntFilter
   taskId: IntNullableFilter
+  updatedAt: DateTimeFilter
 }
 
 input CommentUpdateManyMutationInput {
   content: StringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input CommentUpdateManyWithWhereWithoutTaskInput {
@@ -82,6 +119,9 @@ input CommentUpdateWithWhereUniqueWithoutTaskInput {
 
 input CommentUpdateWithoutTaskInput {
   content: StringFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input CommentUpsertWithWhereUniqueWithoutTaskInput {
@@ -95,13 +135,58 @@ input CommentWhereInput {
   NOT: [CommentWhereInput!]
   OR: [CommentWhereInput!]
   content: StringFilter
+  createdAt: DateTimeFilter
+  deletedAt: DateTimeNullableFilter
   id: IntFilter
   task: TaskRelationFilter
   taskId: IntNullableFilter
+  updatedAt: DateTimeFilter
 }
 
 input CommentWhereUniqueInput {
   id: Int
+}
+
+input DateTimeFieldUpdateOperationsInput {
+  set: Timestamp
+}
+
+input DateTimeFilter {
+  equals: Timestamp
+  gt: Timestamp
+  gte: Timestamp
+  in: [Timestamp!]
+  lt: Timestamp
+  lte: Timestamp
+  not: NestedDateTimeFilter
+  notIn: [Timestamp!]
+}
+
+input DateTimeNullableFilter {
+  equals: Timestamp
+  gt: Timestamp
+  gte: Timestamp
+  in: [Timestamp!]
+  lt: Timestamp
+  lte: Timestamp
+  not: NestedDateTimeNullableFilter
+  notIn: [Timestamp!]
+}
+
+input EnumSexFieldUpdateOperationsInput {
+  set: Sex
+}
+
+input EnumSexFilter {
+  equals: Sex
+  in: [Sex!]
+  not: NestedEnumSexFilter
+  notIn: [Sex!]
+}
+
+type FieldError {
+  field: String!
+  message: String!
 }
 
 input IntFilter {
@@ -127,18 +212,51 @@ input IntNullableFilter {
 }
 
 type Mutation {
+  changePassword(newPassword: String!, token: String!): UserResponse!
   createTask(data: TaskCreateInput!): Task!
   createUser(data: UserCreateInput!): User!
   deleteManyTask(where: TaskWhereInput): AffectedRowsOutput!
   deleteManyUser(where: UserWhereInput): AffectedRowsOutput!
   deleteTask(where: TaskWhereUniqueInput!): Task
   deleteUser(where: UserWhereUniqueInput!): User
+  login(password: String!, usernameOrEmail: String!): UserResponse!
+  logout: Boolean!
+  register(options: RegisterInput!): UserResponse!
   updateManyTask(data: TaskUpdateManyMutationInput!, where: TaskWhereInput): AffectedRowsOutput!
   updateManyUser(data: UserUpdateManyMutationInput!, where: UserWhereInput): AffectedRowsOutput!
   updateTask(data: TaskUpdateInput!, where: TaskWhereUniqueInput!): Task
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   upsertTask(create: TaskCreateInput!, update: TaskUpdateInput!, where: TaskWhereUniqueInput!): Task!
   upsertUser(create: UserCreateInput!, update: UserUpdateInput!, where: UserWhereUniqueInput!): User!
+}
+
+input NestedDateTimeFilter {
+  equals: Timestamp
+  gt: Timestamp
+  gte: Timestamp
+  in: [Timestamp!]
+  lt: Timestamp
+  lte: Timestamp
+  not: NestedDateTimeFilter
+  notIn: [Timestamp!]
+}
+
+input NestedDateTimeNullableFilter {
+  equals: Timestamp
+  gt: Timestamp
+  gte: Timestamp
+  in: [Timestamp!]
+  lt: Timestamp
+  lte: Timestamp
+  not: NestedDateTimeNullableFilter
+  notIn: [Timestamp!]
+}
+
+input NestedEnumSexFilter {
+  equals: Sex
+  in: [Sex!]
+  not: NestedEnumSexFilter
+  notIn: [Sex!]
 }
 
 input NestedIntFilter {
@@ -191,8 +309,72 @@ input NestedStringNullableFilter {
   startsWith: String
 }
 
+input NullableDateTimeFieldUpdateOperationsInput {
+  set: Timestamp
+}
+
 input NullableStringFieldUpdateOperationsInput {
   set: String
+}
+
+type Project {
+  id: Int!
+  key: String!
+}
+
+input ProjectCreateNestedOneWithoutTaskInput {
+  connect: ProjectWhereUniqueInput
+  connectOrCreate: ProjectCreateOrConnectWithoutTaskInput
+  create: ProjectCreateWithoutTaskInput
+}
+
+input ProjectCreateOrConnectWithoutTaskInput {
+  create: ProjectCreateWithoutTaskInput!
+  where: ProjectWhereUniqueInput!
+}
+
+input ProjectCreateWithoutTaskInput {
+  key: String!
+}
+
+input ProjectOrderByInput {
+  id: SortOrder
+  key: SortOrder
+}
+
+input ProjectRelationFilter {
+  is: ProjectWhereInput
+  isNot: ProjectWhereInput
+}
+
+input ProjectUpdateOneRequiredWithoutTaskInput {
+  connect: ProjectWhereUniqueInput
+  connectOrCreate: ProjectCreateOrConnectWithoutTaskInput
+  create: ProjectCreateWithoutTaskInput
+  update: ProjectUpdateWithoutTaskInput
+  upsert: ProjectUpsertWithoutTaskInput
+}
+
+input ProjectUpdateWithoutTaskInput {
+  key: StringFieldUpdateOperationsInput
+}
+
+input ProjectUpsertWithoutTaskInput {
+  create: ProjectCreateWithoutTaskInput!
+  update: ProjectUpdateWithoutTaskInput!
+}
+
+input ProjectWhereInput {
+  AND: [ProjectWhereInput!]
+  NOT: [ProjectWhereInput!]
+  OR: [ProjectWhereInput!]
+  id: IntFilter
+  key: StringFilter
+  task: TaskListRelationFilter
+}
+
+input ProjectWhereUniqueInput {
+  id: Int
 }
 
 type Query {
@@ -200,15 +382,99 @@ type Query {
   aggregateUser(cursor: UserWhereUniqueInput, orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): AggregateUser!
   findFirstTask(cursor: TaskWhereUniqueInput, distinct: [TaskScalarFieldEnum!], orderBy: [TaskOrderByInput!], skip: Int, take: Int, where: TaskWhereInput): Task
   findFirstUser(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): User
+  me: User
   task(where: TaskWhereUniqueInput!): Task
   tasks(cursor: TaskWhereUniqueInput, distinct: [TaskScalarFieldEnum!], orderBy: [TaskOrderByInput!], skip: Int, take: Int, where: TaskWhereInput): [Task!]!
   user(where: UserWhereUniqueInput!): User
   users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
 }
 
+input RegisterInput {
+  email: String = ""
+  firstname: String = ""
+  lastname: String = ""
+  password: String = ""
+  username: String = ""
+}
+
+enum Sex {
+  FEMALE
+  MALE
+  UNKNOWN
+}
+
 enum SortOrder {
   asc
   desc
+}
+
+type Status {
+  alias: String!
+  id: String!
+  title: String!
+}
+
+input StatusCreateNestedOneWithoutTaskInput {
+  connect: StatusWhereUniqueInput
+  connectOrCreate: StatusCreateOrConnectWithoutTaskInput
+  create: StatusCreateWithoutTaskInput
+}
+
+input StatusCreateOrConnectWithoutTaskInput {
+  create: StatusCreateWithoutTaskInput!
+  where: StatusWhereUniqueInput!
+}
+
+input StatusCreateWithoutTaskInput {
+  alias: String!
+  id: String
+  title: String!
+}
+
+input StatusOrderByInput {
+  alias: SortOrder
+  id: SortOrder
+  title: SortOrder
+}
+
+input StatusRelationFilter {
+  is: StatusWhereInput
+  isNot: StatusWhereInput
+}
+
+input StatusUpdateOneWithoutTaskInput {
+  connect: StatusWhereUniqueInput
+  connectOrCreate: StatusCreateOrConnectWithoutTaskInput
+  create: StatusCreateWithoutTaskInput
+  delete: Boolean
+  disconnect: Boolean
+  update: StatusUpdateWithoutTaskInput
+  upsert: StatusUpsertWithoutTaskInput
+}
+
+input StatusUpdateWithoutTaskInput {
+  alias: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+}
+
+input StatusUpsertWithoutTaskInput {
+  create: StatusCreateWithoutTaskInput!
+  update: StatusUpdateWithoutTaskInput!
+}
+
+input StatusWhereInput {
+  AND: [StatusWhereInput!]
+  NOT: [StatusWhereInput!]
+  OR: [StatusWhereInput!]
+  alias: StringFilter
+  id: StringFilter
+  task: TaskListRelationFilter
+  title: StringFilter
+}
+
+input StatusWhereUniqueInput {
+  id: String
 }
 
 input StringFieldUpdateOperationsInput {
@@ -244,34 +510,62 @@ input StringNullableFilter {
 }
 
 type Task {
+  assignee: User
   assigneeId: Int
+  comments(cursor: CommentWhereUniqueInput, distinct: [CommentScalarFieldEnum!], orderBy: [CommentOrderByInput!], skip: Int, take: Int, where: CommentWhereInput): [Comment!]!
+  createdAt: Timestamp!
+  creator: User!
   creatorId: Int!
+  deletedAt: Timestamp
   description: String
   id: Int!
+  parentTask: Task
+  parentTaskId: Int
+  project: Project!
+  projectId: Int!
+  status: Status
+  statusId: String
+  subTasks(cursor: TaskWhereUniqueInput, distinct: [TaskScalarFieldEnum!], orderBy: [TaskOrderByInput!], skip: Int, take: Int, where: TaskWhereInput): [Task!]!
   title: String!
+  updatedAt: Timestamp!
 }
 
 type TaskAvgAggregate {
   assigneeId: Float
   creatorId: Float!
   id: Float!
+  parentTaskId: Float
+  projectId: Float!
 }
 
 type TaskCountAggregate {
   _all: Int!
   assigneeId: Int
+  createdAt: Int
   creatorId: Int!
+  deletedAt: Int
   description: Int
   id: Int!
+  parentTaskId: Int
+  projectId: Int!
+  statusId: Int
   title: Int
+  updatedAt: Int
 }
 
 input TaskCreateInput {
   assignee: UserCreateNestedOneWithoutAssigneeTasksInput
   comments: CommentCreateNestedManyWithoutTaskInput
+  createdAt: Timestamp
   creator: UserCreateNestedOneWithoutCreatorTasksInput!
+  deletedAt: Timestamp
   description: String
+  parentTask: TaskCreateNestedOneWithoutSubTasksInput
+  project: ProjectCreateNestedOneWithoutTaskInput!
+  status: StatusCreateNestedOneWithoutTaskInput
+  subTasks: TaskCreateNestedManyWithoutParentTaskInput
   title: String!
+  updatedAt: Timestamp
 }
 
 input TaskCreateNestedManyWithoutAssigneeInput {
@@ -286,6 +580,18 @@ input TaskCreateNestedManyWithoutCreatorInput {
   create: [TaskCreateWithoutCreatorInput!]
 }
 
+input TaskCreateNestedManyWithoutParentTaskInput {
+  connect: [TaskWhereUniqueInput!]
+  connectOrCreate: [TaskCreateOrConnectWithoutParentTaskInput!]
+  create: [TaskCreateWithoutParentTaskInput!]
+}
+
+input TaskCreateNestedOneWithoutSubTasksInput {
+  connect: TaskWhereUniqueInput
+  connectOrCreate: TaskCreateOrConnectWithoutSubTasksInput
+  create: TaskCreateWithoutSubTasksInput
+}
+
 input TaskCreateOrConnectWithoutAssigneeInput {
   create: TaskCreateWithoutAssigneeInput!
   where: TaskWhereUniqueInput!
@@ -296,18 +602,70 @@ input TaskCreateOrConnectWithoutCreatorInput {
   where: TaskWhereUniqueInput!
 }
 
+input TaskCreateOrConnectWithoutParentTaskInput {
+  create: TaskCreateWithoutParentTaskInput!
+  where: TaskWhereUniqueInput!
+}
+
+input TaskCreateOrConnectWithoutSubTasksInput {
+  create: TaskCreateWithoutSubTasksInput!
+  where: TaskWhereUniqueInput!
+}
+
 input TaskCreateWithoutAssigneeInput {
   comments: CommentCreateNestedManyWithoutTaskInput
+  createdAt: Timestamp
   creator: UserCreateNestedOneWithoutCreatorTasksInput!
+  deletedAt: Timestamp
   description: String
+  parentTask: TaskCreateNestedOneWithoutSubTasksInput
+  project: ProjectCreateNestedOneWithoutTaskInput!
+  status: StatusCreateNestedOneWithoutTaskInput
+  subTasks: TaskCreateNestedManyWithoutParentTaskInput
   title: String!
+  updatedAt: Timestamp
 }
 
 input TaskCreateWithoutCreatorInput {
   assignee: UserCreateNestedOneWithoutAssigneeTasksInput
   comments: CommentCreateNestedManyWithoutTaskInput
+  createdAt: Timestamp
+  deletedAt: Timestamp
   description: String
+  parentTask: TaskCreateNestedOneWithoutSubTasksInput
+  project: ProjectCreateNestedOneWithoutTaskInput!
+  status: StatusCreateNestedOneWithoutTaskInput
+  subTasks: TaskCreateNestedManyWithoutParentTaskInput
   title: String!
+  updatedAt: Timestamp
+}
+
+input TaskCreateWithoutParentTaskInput {
+  assignee: UserCreateNestedOneWithoutAssigneeTasksInput
+  comments: CommentCreateNestedManyWithoutTaskInput
+  createdAt: Timestamp
+  creator: UserCreateNestedOneWithoutCreatorTasksInput!
+  deletedAt: Timestamp
+  description: String
+  project: ProjectCreateNestedOneWithoutTaskInput!
+  status: StatusCreateNestedOneWithoutTaskInput
+  subTasks: TaskCreateNestedManyWithoutParentTaskInput
+  title: String!
+  updatedAt: Timestamp
+}
+
+input TaskCreateWithoutSubTasksInput {
+  assignee: UserCreateNestedOneWithoutAssigneeTasksInput
+  comments: CommentCreateNestedManyWithoutTaskInput
+  createdAt: Timestamp
+  creator: UserCreateNestedOneWithoutCreatorTasksInput!
+  deletedAt: Timestamp
+  description: String
+  parentTask: TaskCreateNestedOneWithoutSubTasksInput
+  project: ProjectCreateNestedOneWithoutTaskInput!
+  status: StatusCreateNestedOneWithoutTaskInput
+  title: String!
+  updatedAt: Timestamp
 }
 
 input TaskListRelationFilter {
@@ -318,28 +676,49 @@ input TaskListRelationFilter {
 
 type TaskMaxAggregate {
   assigneeId: Int
+  createdAt: Timestamp
   creatorId: Int!
+  deletedAt: Timestamp
   description: String
   id: Int!
+  parentTaskId: Int
+  projectId: Int!
+  statusId: String
   title: String
+  updatedAt: Timestamp
 }
 
 type TaskMinAggregate {
   assigneeId: Int
+  createdAt: Timestamp
   creatorId: Int!
+  deletedAt: Timestamp
   description: String
   id: Int!
+  parentTaskId: Int
+  projectId: Int!
+  statusId: String
   title: String
+  updatedAt: Timestamp
 }
 
 input TaskOrderByInput {
   assignee: UserOrderByInput
   assigneeId: SortOrder
+  createdAt: SortOrder
   creator: UserOrderByInput
   creatorId: SortOrder
+  deletedAt: SortOrder
   description: SortOrder
   id: SortOrder
+  parentTask: TaskOrderByInput
+  parentTaskId: SortOrder
+  project: ProjectOrderByInput
+  projectId: SortOrder
+  status: StatusOrderByInput
+  statusId: SortOrder
   title: SortOrder
+  updatedAt: SortOrder
 }
 
 input TaskRelationFilter {
@@ -349,10 +728,16 @@ input TaskRelationFilter {
 
 enum TaskScalarFieldEnum {
   assigneeId
+  createdAt
   creatorId
+  deletedAt
   description
   id
+  parentTaskId
+  projectId
+  statusId
   title
+  updatedAt
 }
 
 input TaskScalarWhereInput {
@@ -360,29 +745,47 @@ input TaskScalarWhereInput {
   NOT: [TaskScalarWhereInput!]
   OR: [TaskScalarWhereInput!]
   assigneeId: IntNullableFilter
+  createdAt: DateTimeFilter
   creatorId: IntFilter
+  deletedAt: DateTimeNullableFilter
   description: StringNullableFilter
   id: IntFilter
+  parentTaskId: IntNullableFilter
+  projectId: IntFilter
+  statusId: StringNullableFilter
   title: StringFilter
+  updatedAt: DateTimeFilter
 }
 
 type TaskSumAggregate {
   assigneeId: Int
   creatorId: Int!
   id: Int!
+  parentTaskId: Int
+  projectId: Int!
 }
 
 input TaskUpdateInput {
   assignee: UserUpdateOneWithoutAssigneeTasksInput
   comments: CommentUpdateManyWithoutTaskInput
+  createdAt: DateTimeFieldUpdateOperationsInput
   creator: UserUpdateOneRequiredWithoutCreatorTasksInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
+  parentTask: TaskUpdateOneWithoutSubTasksInput
+  project: ProjectUpdateOneRequiredWithoutTaskInput
+  status: StatusUpdateOneWithoutTaskInput
+  subTasks: TaskUpdateManyWithoutParentTaskInput
   title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input TaskUpdateManyMutationInput {
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
   title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input TaskUpdateManyWithWhereWithoutAssigneeInput {
@@ -391,6 +794,11 @@ input TaskUpdateManyWithWhereWithoutAssigneeInput {
 }
 
 input TaskUpdateManyWithWhereWithoutCreatorInput {
+  data: TaskUpdateManyMutationInput!
+  where: TaskScalarWhereInput!
+}
+
+input TaskUpdateManyWithWhereWithoutParentTaskInput {
   data: TaskUpdateManyMutationInput!
   where: TaskScalarWhereInput!
 }
@@ -421,6 +829,29 @@ input TaskUpdateManyWithoutCreatorInput {
   upsert: [TaskUpsertWithWhereUniqueWithoutCreatorInput!]
 }
 
+input TaskUpdateManyWithoutParentTaskInput {
+  connect: [TaskWhereUniqueInput!]
+  connectOrCreate: [TaskCreateOrConnectWithoutParentTaskInput!]
+  create: [TaskCreateWithoutParentTaskInput!]
+  delete: [TaskWhereUniqueInput!]
+  deleteMany: [TaskScalarWhereInput!]
+  disconnect: [TaskWhereUniqueInput!]
+  set: [TaskWhereUniqueInput!]
+  update: [TaskUpdateWithWhereUniqueWithoutParentTaskInput!]
+  updateMany: [TaskUpdateManyWithWhereWithoutParentTaskInput!]
+  upsert: [TaskUpsertWithWhereUniqueWithoutParentTaskInput!]
+}
+
+input TaskUpdateOneWithoutSubTasksInput {
+  connect: TaskWhereUniqueInput
+  connectOrCreate: TaskCreateOrConnectWithoutSubTasksInput
+  create: TaskCreateWithoutSubTasksInput
+  delete: Boolean
+  disconnect: Boolean
+  update: TaskUpdateWithoutSubTasksInput
+  upsert: TaskUpsertWithoutSubTasksInput
+}
+
 input TaskUpdateWithWhereUniqueWithoutAssigneeInput {
   data: TaskUpdateWithoutAssigneeInput!
   where: TaskWhereUniqueInput!
@@ -431,18 +862,65 @@ input TaskUpdateWithWhereUniqueWithoutCreatorInput {
   where: TaskWhereUniqueInput!
 }
 
+input TaskUpdateWithWhereUniqueWithoutParentTaskInput {
+  data: TaskUpdateWithoutParentTaskInput!
+  where: TaskWhereUniqueInput!
+}
+
 input TaskUpdateWithoutAssigneeInput {
   comments: CommentUpdateManyWithoutTaskInput
+  createdAt: DateTimeFieldUpdateOperationsInput
   creator: UserUpdateOneRequiredWithoutCreatorTasksInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
+  parentTask: TaskUpdateOneWithoutSubTasksInput
+  project: ProjectUpdateOneRequiredWithoutTaskInput
+  status: StatusUpdateOneWithoutTaskInput
+  subTasks: TaskUpdateManyWithoutParentTaskInput
   title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input TaskUpdateWithoutCreatorInput {
   assignee: UserUpdateOneWithoutAssigneeTasksInput
   comments: CommentUpdateManyWithoutTaskInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
   description: NullableStringFieldUpdateOperationsInput
+  parentTask: TaskUpdateOneWithoutSubTasksInput
+  project: ProjectUpdateOneRequiredWithoutTaskInput
+  status: StatusUpdateOneWithoutTaskInput
+  subTasks: TaskUpdateManyWithoutParentTaskInput
   title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input TaskUpdateWithoutParentTaskInput {
+  assignee: UserUpdateOneWithoutAssigneeTasksInput
+  comments: CommentUpdateManyWithoutTaskInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  creator: UserUpdateOneRequiredWithoutCreatorTasksInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  project: ProjectUpdateOneRequiredWithoutTaskInput
+  status: StatusUpdateOneWithoutTaskInput
+  subTasks: TaskUpdateManyWithoutParentTaskInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input TaskUpdateWithoutSubTasksInput {
+  assignee: UserUpdateOneWithoutAssigneeTasksInput
+  comments: CommentUpdateManyWithoutTaskInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  creator: UserUpdateOneRequiredWithoutCreatorTasksInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
+  description: NullableStringFieldUpdateOperationsInput
+  parentTask: TaskUpdateOneWithoutSubTasksInput
+  project: ProjectUpdateOneRequiredWithoutTaskInput
+  status: StatusUpdateOneWithoutTaskInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input TaskUpsertWithWhereUniqueWithoutAssigneeInput {
@@ -457,6 +935,17 @@ input TaskUpsertWithWhereUniqueWithoutCreatorInput {
   where: TaskWhereUniqueInput!
 }
 
+input TaskUpsertWithWhereUniqueWithoutParentTaskInput {
+  create: TaskCreateWithoutParentTaskInput!
+  update: TaskUpdateWithoutParentTaskInput!
+  where: TaskWhereUniqueInput!
+}
+
+input TaskUpsertWithoutSubTasksInput {
+  create: TaskCreateWithoutSubTasksInput!
+  update: TaskUpdateWithoutSubTasksInput!
+}
+
 input TaskWhereInput {
   AND: [TaskWhereInput!]
   NOT: [TaskWhereInput!]
@@ -464,24 +953,46 @@ input TaskWhereInput {
   assignee: UserRelationFilter
   assigneeId: IntNullableFilter
   comments: CommentListRelationFilter
+  createdAt: DateTimeFilter
   creator: UserRelationFilter
   creatorId: IntFilter
+  deletedAt: DateTimeNullableFilter
   description: StringNullableFilter
   id: IntFilter
+  parentTask: TaskRelationFilter
+  parentTaskId: IntNullableFilter
+  project: ProjectRelationFilter
+  projectId: IntFilter
+  status: StatusRelationFilter
+  statusId: StringNullableFilter
+  subTasks: TaskListRelationFilter
   title: StringFilter
+  updatedAt: DateTimeFilter
 }
 
 input TaskWhereUniqueInput {
   id: Int
 }
 
+"""
+The javascript `Date` as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
 type User {
   assigneeTasks(cursor: TaskWhereUniqueInput, distinct: [TaskScalarFieldEnum!], orderBy: [TaskOrderByInput!], skip: Int, take: Int, where: TaskWhereInput): [Task!]!
+  birthDate: Timestamp
+  createdAt: Timestamp!
   creatorTasks(cursor: TaskWhereUniqueInput, distinct: [TaskScalarFieldEnum!], orderBy: [TaskOrderByInput!], skip: Int, take: Int, where: TaskWhereInput): [Task!]!
+  deletedAt: Timestamp
   email: String!
+  firstname: String!
   id: Int!
-  name: String!
+  lastname: String!
   password: String!
+  sex: Sex!
+  updatedAt: Timestamp!
+  username: String!
 }
 
 type UserAvgAggregate {
@@ -490,18 +1001,32 @@ type UserAvgAggregate {
 
 type UserCountAggregate {
   _all: Int!
+  birthDate: Int
+  createdAt: Int
+  deletedAt: Int
   email: Int
+  firstname: Int
   id: Int!
-  name: Int
+  lastname: Int
   password: Int
+  sex: Int
+  updatedAt: Int
+  username: Int
 }
 
 input UserCreateInput {
   assigneeTasks: TaskCreateNestedManyWithoutAssigneeInput
+  birthDate: Timestamp
+  createdAt: Timestamp
   creatorTasks: TaskCreateNestedManyWithoutCreatorInput
+  deletedAt: Timestamp
   email: String!
-  name: String!
+  firstname: String!
+  lastname: String!
   password: String!
+  sex: Sex
+  updatedAt: Timestamp
+  username: String!
 }
 
 input UserCreateNestedOneWithoutAssigneeTasksInput {
@@ -527,38 +1052,73 @@ input UserCreateOrConnectWithoutCreatorTasksInput {
 }
 
 input UserCreateWithoutAssigneeTasksInput {
+  birthDate: Timestamp
+  createdAt: Timestamp
   creatorTasks: TaskCreateNestedManyWithoutCreatorInput
+  deletedAt: Timestamp
   email: String!
-  name: String!
+  firstname: String!
+  lastname: String!
   password: String!
+  sex: Sex
+  updatedAt: Timestamp
+  username: String!
 }
 
 input UserCreateWithoutCreatorTasksInput {
   assigneeTasks: TaskCreateNestedManyWithoutAssigneeInput
+  birthDate: Timestamp
+  createdAt: Timestamp
+  deletedAt: Timestamp
   email: String!
-  name: String!
+  firstname: String!
+  lastname: String!
   password: String!
+  sex: Sex
+  updatedAt: Timestamp
+  username: String!
 }
 
 type UserMaxAggregate {
+  birthDate: Timestamp
+  createdAt: Timestamp
+  deletedAt: Timestamp
   email: String
+  firstname: String
   id: Int!
-  name: String
+  lastname: String
   password: String
+  sex: Sex
+  updatedAt: Timestamp
+  username: String
 }
 
 type UserMinAggregate {
+  birthDate: Timestamp
+  createdAt: Timestamp
+  deletedAt: Timestamp
   email: String
+  firstname: String
   id: Int!
-  name: String
+  lastname: String
   password: String
+  sex: Sex
+  updatedAt: Timestamp
+  username: String
 }
 
 input UserOrderByInput {
+  birthDate: SortOrder
+  createdAt: SortOrder
+  deletedAt: SortOrder
   email: SortOrder
+  firstname: SortOrder
   id: SortOrder
-  name: SortOrder
+  lastname: SortOrder
   password: SortOrder
+  sex: SortOrder
+  updatedAt: SortOrder
+  username: SortOrder
 }
 
 input UserRelationFilter {
@@ -566,11 +1126,23 @@ input UserRelationFilter {
   isNot: UserWhereInput
 }
 
+type UserResponse {
+  errors: [FieldError!]
+  user: User
+}
+
 enum UserScalarFieldEnum {
+  birthDate
+  createdAt
+  deletedAt
   email
+  firstname
   id
-  name
+  lastname
   password
+  sex
+  updatedAt
+  username
 }
 
 type UserSumAggregate {
@@ -579,16 +1151,30 @@ type UserSumAggregate {
 
 input UserUpdateInput {
   assigneeTasks: TaskUpdateManyWithoutAssigneeInput
+  birthDate: NullableDateTimeFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
   creatorTasks: TaskUpdateManyWithoutCreatorInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
   email: StringFieldUpdateOperationsInput
-  name: StringFieldUpdateOperationsInput
+  firstname: StringFieldUpdateOperationsInput
+  lastname: StringFieldUpdateOperationsInput
   password: StringFieldUpdateOperationsInput
+  sex: EnumSexFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  username: StringFieldUpdateOperationsInput
 }
 
 input UserUpdateManyMutationInput {
+  birthDate: NullableDateTimeFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
   email: StringFieldUpdateOperationsInput
-  name: StringFieldUpdateOperationsInput
+  firstname: StringFieldUpdateOperationsInput
+  lastname: StringFieldUpdateOperationsInput
   password: StringFieldUpdateOperationsInput
+  sex: EnumSexFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  username: StringFieldUpdateOperationsInput
 }
 
 input UserUpdateOneRequiredWithoutCreatorTasksInput {
@@ -610,17 +1196,31 @@ input UserUpdateOneWithoutAssigneeTasksInput {
 }
 
 input UserUpdateWithoutAssigneeTasksInput {
+  birthDate: NullableDateTimeFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
   creatorTasks: TaskUpdateManyWithoutCreatorInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
   email: StringFieldUpdateOperationsInput
-  name: StringFieldUpdateOperationsInput
+  firstname: StringFieldUpdateOperationsInput
+  lastname: StringFieldUpdateOperationsInput
   password: StringFieldUpdateOperationsInput
+  sex: EnumSexFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  username: StringFieldUpdateOperationsInput
 }
 
 input UserUpdateWithoutCreatorTasksInput {
   assigneeTasks: TaskUpdateManyWithoutAssigneeInput
+  birthDate: NullableDateTimeFieldUpdateOperationsInput
+  createdAt: DateTimeFieldUpdateOperationsInput
+  deletedAt: NullableDateTimeFieldUpdateOperationsInput
   email: StringFieldUpdateOperationsInput
-  name: StringFieldUpdateOperationsInput
+  firstname: StringFieldUpdateOperationsInput
+  lastname: StringFieldUpdateOperationsInput
   password: StringFieldUpdateOperationsInput
+  sex: EnumSexFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+  username: StringFieldUpdateOperationsInput
 }
 
 input UserUpsertWithoutAssigneeTasksInput {
@@ -638,11 +1238,18 @@ input UserWhereInput {
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
   assigneeTasks: TaskListRelationFilter
+  birthDate: DateTimeNullableFilter
+  createdAt: DateTimeFilter
   creatorTasks: TaskListRelationFilter
+  deletedAt: DateTimeNullableFilter
   email: StringFilter
+  firstname: StringFilter
   id: IntFilter
-  name: StringFilter
+  lastname: StringFilter
   password: StringFilter
+  sex: EnumSexFilter
+  updatedAt: DateTimeFilter
+  username: StringFilter
 }
 
 input UserWhereUniqueInput {

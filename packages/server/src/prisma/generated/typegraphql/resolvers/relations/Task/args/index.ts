@@ -1,1 +1,2 @@
-export { TaskCommentsArgs } from "./TaskCommentsArgs"
+export { TaskCommentsArgs } from "./TaskCommentsArgs";
+export { TaskSubTasksArgs } from "./TaskSubTasksArgs";

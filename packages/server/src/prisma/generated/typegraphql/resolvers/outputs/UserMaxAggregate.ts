@@ -1,7 +1,8 @@
-import * as TypeGraphQL from "type-graphql"
-import * as GraphQLScalars from "graphql-scalars"
-import { Prisma } from "@prisma/client"
-import { DecimalJSScalar } from "../../scalars"
+import * as TypeGraphQL from "type-graphql";
+import * as GraphQLScalars from "graphql-scalars";
+import { Prisma } from "@prisma/client";
+import { DecimalJSScalar } from "../../scalars";
+import { Sex } from "../../enums/Sex";
 
 @TypeGraphQL.ObjectType({
   isAbstract: true
@@ -10,20 +11,55 @@ export class UserMaxAggregate {
   @TypeGraphQL.Field(_type => TypeGraphQL.Int, {
     nullable: false
   })
-  id!: number
+  id!: number;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true
   })
-  name!: string | null
+  username!: string | null;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true
   })
-  email!: string | null
+  firstname!: string | null;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true
   })
-  password!: string | null
+  lastname!: string | null;
+
+  @TypeGraphQL.Field(_type => Sex, {
+    nullable: true
+  })
+  sex!: "MALE" | "FEMALE" | "UNKNOWN" | null;
+
+  @TypeGraphQL.Field(_type => String, {
+    nullable: true
+  })
+  email!: string | null;
+
+  @TypeGraphQL.Field(_type => String, {
+    nullable: true
+  })
+  password!: string | null;
+
+  @TypeGraphQL.Field(_type => Date, {
+    nullable: true
+  })
+  birthDate!: Date | null;
+
+  @TypeGraphQL.Field(_type => Date, {
+    nullable: true
+  })
+  createdAt!: Date | null;
+
+  @TypeGraphQL.Field(_type => Date, {
+    nullable: true
+  })
+  updatedAt!: Date | null;
+
+  @TypeGraphQL.Field(_type => Date, {
+    nullable: true
+  })
+  deletedAt!: Date | null;
 }

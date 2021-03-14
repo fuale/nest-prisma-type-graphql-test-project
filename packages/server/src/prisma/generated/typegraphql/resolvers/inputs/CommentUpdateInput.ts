@@ -1,9 +1,11 @@
-import * as TypeGraphQL from "type-graphql"
-import * as GraphQLScalars from "graphql-scalars"
-import { Prisma } from "@prisma/client"
-import { DecimalJSScalar } from "../../scalars"
-import { StringFieldUpdateOperationsInput } from "../inputs/StringFieldUpdateOperationsInput"
-import { TaskUpdateOneWithoutCommentsInput } from "../inputs/TaskUpdateOneWithoutCommentsInput"
+import * as TypeGraphQL from "type-graphql";
+import * as GraphQLScalars from "graphql-scalars";
+import { Prisma } from "@prisma/client";
+import { DecimalJSScalar } from "../../scalars";
+import { DateTimeFieldUpdateOperationsInput } from "../inputs/DateTimeFieldUpdateOperationsInput";
+import { NullableDateTimeFieldUpdateOperationsInput } from "../inputs/NullableDateTimeFieldUpdateOperationsInput";
+import { StringFieldUpdateOperationsInput } from "../inputs/StringFieldUpdateOperationsInput";
+import { TaskUpdateOneWithoutCommentsInput } from "../inputs/TaskUpdateOneWithoutCommentsInput";
 
 @TypeGraphQL.InputType({
   isAbstract: true
@@ -12,10 +14,25 @@ export class CommentUpdateInput {
   @TypeGraphQL.Field(_type => StringFieldUpdateOperationsInput, {
     nullable: true
   })
-  content?: StringFieldUpdateOperationsInput | undefined
+  content?: StringFieldUpdateOperationsInput | undefined;
+
+  @TypeGraphQL.Field(_type => DateTimeFieldUpdateOperationsInput, {
+    nullable: true
+  })
+  createdAt?: DateTimeFieldUpdateOperationsInput | undefined;
+
+  @TypeGraphQL.Field(_type => DateTimeFieldUpdateOperationsInput, {
+    nullable: true
+  })
+  updatedAt?: DateTimeFieldUpdateOperationsInput | undefined;
+
+  @TypeGraphQL.Field(_type => NullableDateTimeFieldUpdateOperationsInput, {
+    nullable: true
+  })
+  deletedAt?: NullableDateTimeFieldUpdateOperationsInput | undefined;
 
   @TypeGraphQL.Field(_type => TaskUpdateOneWithoutCommentsInput, {
     nullable: true
   })
-  task?: TaskUpdateOneWithoutCommentsInput | undefined
+  task?: TaskUpdateOneWithoutCommentsInput | undefined;
 }
